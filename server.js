@@ -58,30 +58,16 @@ app.use((req, res, next) => {
   next();
 });
 
-// serve static prototype files
-app.use(express.static(path.join(__dirname)))
+// JSON parsing middleware
 app.use(express.json())
 
-// Serve root route - handle both / and /skilleedge-pro.html
+// Serve root route - MUST be before static middleware
 app.get('/', (req, res) => {
-  const filePath = path.join(__dirname, 'skilleedge-pro.html')
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error('Error sending file:', err)
-      res.status(500).send('Error loading application')
-    }
-  })
+  res.sendFile(path.join(__dirname, 'skilleedge-pro.html'))
 })
 
-app.get('/skilleedge-pro.html', (req, res) => {
-  const filePath = path.join(__dirname, 'skilleedge-pro.html')
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error('Error sending file:', err)
-      res.status(500).send('Error loading application')
-    }
-  })
-})
+// serve static prototype files (images, css, js, etc)
+app.use(express.static(path.join(__dirname)))
 
 // Network status endpoint
 app.get('/api/network-status', (req, res) => {
