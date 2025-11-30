@@ -3,6 +3,7 @@ const http = require('http')
 const path = require('path')
 const fs = require('fs')
 const { Server } = require('socket.io')
+const blockchainManager = require('./blockchain-utils')
 
 const PORT = process.env.PORT || 3000
 const DATA_FILE = path.join(__dirname, 'data.json')
@@ -97,6 +98,170 @@ app.get('/api/network-status', (req, res) => {
     timestamp: new Date()
   });
 });
+
+// ==================== BLOCKCHAIN API ROUTES ====================
+
+// Get blockchain statistics
+app.get('/api/blockchain/stats', (req, res) => {
+  try {
+    const stats = blockchainManager.getBlockchainStats()
+    res.json({
+      status: 'success',
+      data: stats,
+      timestamp: new Date()
+    })
+  } catch (err) {
+    console.error('[BLOCKCHAIN] Stats error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// Generate blockchain address for user
+app.post('/api/blockchain/generate-address', (req, res) => {
+  try {
+    const { userId } = req.body
+    if (!userId) return res.status(400).json({ error: 'userId required' })
+    
+    const address = blockchainManager.generateBlockchainAddress(userId)
+    res.json({
+      status: 'success',
+      address,
+      timestamp: new Date()
+    })
+  } catch (err) {
+    console.error('[BLOCKCHAIN] Generate address error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// Issue achievement with blockchain verification
+app.post('/api/blockchain/issue-achievement', (req, res) => {
+  try {
+    const { userId, userName, achievement } = req.body
+    if (!userId || !achievement) return res.status(400).json({ error: 'Missing required fields' })
+    
+    const certificate = blockchainManager.createAchievementCertificate(
+      { id: userId, name: userName },
+      achievement
+    )
+    
+    res.json({
+      status: 'success',
+      certificate,
+      message: 'Achievement issued and verified on blockchain',
+      timestamp: new Date()
+    })
+  } catch (err) {
+    console.error('[BLOCKCHAIN] Issue achievement error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// Create verifiable credential
+app.post('/api/blockchain/verify-credential', (req, res) => {
+  try {
+    const { userId, userName, email, achievements } = req.body
+    if (!userId || !achievements) return res.status(400).json({ error: 'Missing required fields' })
+    
+    const credential = blockchainManager.generateVerifiableCredential(
+      { id: userId, name: userName, email },
+      achievements
+    )
+    
+    res.json({
+      status: 'success',
+      credential,
+      message: 'Verifiable credential generated',
+      timestamp: new Date()
+    })
+  } catch (err) {
+    console.error('[BLOCKCHAIN] Verify credential error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// Create NFT metadata for achievement
+app.post('/api/blockchain/create-nft', (req, res) => {
+  try {
+    const { achievement, recipientAddress } = req.body
+    if (!achievement || !recipientAddress) return res.status(400).json({ error: 'Missing required fields' })
+    
+    const nftMetadata = blockchainManager.createNFTMetadata(achievement, recipientAddress)
+    
+    res.json({
+      status: 'success',
+      nftMetadata,
+      message: 'NFT metadata created for achievement badge',
+      timestamp: new Date()
+    })
+  } catch (err) {
+    console.error('[BLOCKCHAIN] Create NFT error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// Create blockchain transaction
+app.post('/api/blockchain/create-transaction', (req, res) => {
+  try {
+    const { from, to, data } = req.body
+    if (!from || !to) return res.status(400).json({ error: 'from and to addresses required' })
+    
+    const transaction = blockchainManager.createTransaction(from, to, data)
+    
+    res.json({
+      status: 'success',
+      transaction,
+      message: 'Transaction created on blockchain',
+      timestamp: new Date()
+    })
+  } catch (err) {
+    console.error('[BLOCKCHAIN] Create transaction error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// Verify blockchain transaction
+app.get('/api/blockchain/verify-transaction/:txHash', (req, res) => {
+  try {
+    const { txHash } = req.params
+    const verification = blockchainManager.verifyTransaction(txHash)
+    
+    res.json({
+      status: 'success',
+      verification,
+      timestamp: new Date()
+    })
+  } catch (err) {
+    console.error('[BLOCKCHAIN] Verify transaction error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
+// Smart contract interaction
+app.post('/api/blockchain/contract-interaction', (req, res) => {
+  try {
+    const { contractAddress, functionName, parameters, caller, result } = req.body
+    if (!functionName || !caller) return res.status(400).json({ error: 'Missing required fields' })
+    
+    const interaction = blockchainManager.createSmartContractInteraction({
+      contractAddress,
+      functionName,
+      parameters,
+      caller,
+      result
+    })
+    
+    res.json({
+      status: 'success',
+      interaction,
+      message: 'Smart contract interaction recorded',
+      timestamp: new Date()
+    })
+  } catch (err) {
+    console.error('[BLOCKCHAIN] Contract interaction error:', err)
+    res.status(500).json({ error: err.message })
+  }
+})
 
 function loadData(){
   try{

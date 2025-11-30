@@ -1336,6 +1336,7 @@
                     <li><a href="#" class="nav-link" onclick="switchDashboard('aitutor')">AI Tutor</a></li>
                     <li><a href="#" class="nav-link" onclick="switchDashboard('career')">Career Zone</a></li>
                     <li><a href="#" class="nav-link" onclick="switchDashboard('community')">Community</a></li>
+                    <li><a href="#" class="nav-link" onclick="switchDashboard('blockchain')">🔗 Blockchain Credentials</a></li>
                 </ul>
                 <hr style="border-color: rgba(14, 165, 164, 0.1); margin: 20px 0;">
                 <button class="btn-secondary" style="width: 100%;" onclick="logout()">Logout</button>
@@ -1882,6 +1883,111 @@ data = pd.read_csv('data.csv')"></textarea>
                             </ul>
                         </div>
                         <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="viewCommunity()">Learn More</button>
+                    </div>
+                </div>
+
+                <!-- Blockchain Credentials View -->
+                <div id="blockchain" class="dashboard-view" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                        <div>
+                            <h1 class="text-3xl font-bold mb-2 gradient-text">🔗 Blockchain Credentials</h1>
+                            <p style="color: var(--muted); margin-bottom: 20px;">Secure, verifiable credentials on the blockchain. Earn NFTs and certificates for your achievements.</p>
+                        </div>
+                    </div>
+
+                    <!-- Blockchain Address Section -->
+                    <div class="grid-2" style="margin-bottom: 30px;">
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-3">Your Blockchain Address</h3>
+                            <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 15px;">Your unique Web3 identity:</p>
+                            <div id="blockchainAddress" style="background: rgba(14, 165, 164, 0.1); padding: 15px; border-radius: 8px; border: 1px solid rgba(14, 165, 164, 0.3); word-break: break-all; font-family: monospace; font-size: 0.85rem; color: var(--primary); margin-bottom: 15px;">
+                                Loading...
+                            </div>
+                            <button class="btn-primary" style="width: 100%; font-size: 0.9rem;" onclick="generateBlockchainAddress()">Generate Address</button>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="text-lg font-bold mb-3">Blockchain Statistics</h3>
+                            <div id="blockchainStats" style="color: var(--muted);">
+                                <p style="margin-bottom: 8px;">🔐 Transactions: <span style="color: var(--primary); font-weight: 600;">-</span></p>
+                                <p style="margin-bottom: 8px;">✅ Verified Users: <span style="color: var(--primary); font-weight: 600;">-</span></p>
+                                <p style="margin-bottom: 8px;">🏆 Achievements: <span style="color: var(--primary); font-weight: 600;">-</span></p>
+                                <p style="margin-bottom: 15px;">💎 Total Points Issued: <span style="color: var(--primary); font-weight: 600;">-</span></p>
+                            </div>
+                            <button class="btn-secondary" style="width: 100%; font-size: 0.9rem;" onclick="loadBlockchainStats()">Refresh Stats</button>
+                        </div>
+                    </div>
+
+                    <!-- Achievement Certificates Section -->
+                    <h2 class="text-xl font-bold mb-4">Achievement Certificates</h2>
+                    <div class="card" style="margin-bottom: 30px;">
+                        <p style="color: var(--muted); margin-bottom: 20px;">Issue blockchain-verified achievement certificates with NFT metadata:</p>
+                        <div style="background: rgba(14, 165, 164, 0.05); padding: 20px; border-radius: 12px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                <div>
+                                    <label style="display: block; color: var(--muted); margin-bottom: 8px; font-weight: 600;">Achievement Title</label>
+                                    <input type="text" id="achievementTitle" class="input-field" placeholder="e.g., Python Master">
+                                </div>
+                                <div>
+                                    <label style="display: block; color: var(--muted); margin-bottom: 8px; font-weight: 600;">Points Earned</label>
+                                    <input type="number" id="achievementPoints" class="input-field" placeholder="500">
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: block; color: var(--muted); margin-bottom: 8px; font-weight: 600;">Description</label>
+                                <textarea id="achievementDescription" class="input-field" style="height: 100px; resize: vertical;" placeholder="Describe the achievement..."></textarea>
+                            </div>
+                            <button class="btn-primary" style="width: 100%;" onclick="issueBlockchainAchievement()">🔗 Issue Blockchain Certificate</button>
+                        </div>
+                    </div>
+
+                    <!-- Verifiable Credentials -->
+                    <h2 class="text-xl font-bold mb-4">Verifiable Credentials</h2>
+                    <div class="card" style="margin-bottom: 30px;">
+                        <p style="color: var(--muted); margin-bottom: 20px;">Generate W3C-compliant verifiable credentials for your achievements:</p>
+                        <button class="btn-primary" style="width: 100%;" onclick="generateVerifiableCredential()">📜 Generate Credential</button>
+                        <div id="credentialOutput" style="background: rgba(14, 165, 164, 0.1); padding: 15px; border-radius: 8px; margin-top: 15px; display: none; max-height: 300px; overflow-y: auto;">
+                            <pre id="credentialJSON" style="font-size: 0.85rem; color: var(--primary);"></pre>
+                        </div>
+                    </div>
+
+                    <!-- NFT Badges -->
+                    <h2 class="text-xl font-bold mb-4">NFT Achievement Badges</h2>
+                    <div class="grid-3" style="margin-bottom: 30px;">
+                        <div class="card">
+                            <h3 style="font-weight: 600; color: var(--primary); margin-bottom: 10px;">⭐ NFT Metadata</h3>
+                            <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 15px;">Create ERC-721 compliant NFT metadata</p>
+                            <button class="btn-primary" style="width: 100%; font-size: 0.9rem;" onclick="createNFTMetadata()">Create NFT</button>
+                        </div>
+                        <div class="card">
+                            <h3 style="font-weight: 600; color: var(--primary); margin-bottom: 10px;">🔗 Transaction</h3>
+                            <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 15px;">Create blockchain transaction record</p>
+                            <button class="btn-primary" style="width: 100%; font-size: 0.9rem;" onclick="createBlockchainTransaction()">Record Transaction</button>
+                        </div>
+                        <div class="card">
+                            <h3 style="font-weight: 600; color: var(--primary); margin-bottom: 10px;">✅ Verify</h3>
+                            <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 15px;">Verify transaction on blockchain</p>
+                            <button class="btn-primary" style="width: 100%; font-size: 0.9rem;" onclick="verifyBlockchainTransaction()">Verify</button>
+                        </div>
+                    </div>
+
+                    <!-- Smart Contracts -->
+                    <h2 class="text-xl font-bold mb-4">Smart Contract Interaction</h2>
+                    <div class="card">
+                        <p style="color: var(--muted); margin-bottom: 20px;">Interact with SmartMentorAI smart contracts for achievement verification and NFT minting:</p>
+                        <div style="background: rgba(14, 165, 164, 0.05); padding: 20px; border-radius: 12px;">
+                            <div style="margin-bottom: 15px;">
+                                <label style="display: block; color: var(--muted); margin-bottom: 8px; font-weight: 600;">Function Name</label>
+                                <select id="contractFunction" class="input-field">
+                                    <option value="">-- Select Function --</option>
+                                    <option value="issueAchievement">Issue Achievement</option>
+                                    <option value="verifyCertificate">Verify Certificate</option>
+                                    <option value="updateLeaderboard">Update Leaderboard</option>
+                                    <option value="mintNFT">Mint Achievement NFT</option>
+                                </select>
+                            </div>
+                            <button class="btn-primary" style="width: 100%;" onclick="executeSmartContract()">⚙️ Execute Contract</button>
+                        </div>
                     </div>
                 </div>
 
@@ -4662,7 +4768,232 @@ Memory Used: 45.2 MB</pre>
             }
         }
 
+        // ==================== BLOCKCHAIN FUNCTIONS ====================
         
+        async function generateBlockchainAddress() {
+            try {
+                const userId = currentUser?.id || 'user-' + Date.now();
+                const response = await fetch('/api/blockchain/generate-address', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId })
+                });
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    document.getElementById('blockchainAddress').textContent = data.address;
+                    showNotification('Blockchain address generated! 🔗', 'success');
+                } else {
+                    showNotification('Failed to generate address', 'error');
+                }
+            } catch (err) {
+                console.error('Error generating blockchain address:', err);
+                showNotification('Error: ' + err.message, 'error');
+            }
+        }
+
+        async function loadBlockchainStats() {
+            try {
+                const response = await fetch('/api/blockchain/stats');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const stats = data.data;
+                    document.getElementById('blockchainStats').innerHTML = `
+                        <p style="margin-bottom: 8px;">🔐 Transactions: <span style="color: var(--primary); font-weight: 600;">${stats.totalTransactions}</span></p>
+                        <p style="margin-bottom: 8px;">✅ Verified Users: <span style="color: var(--primary); font-weight: 600;">${stats.verifiedUsers}</span></p>
+                        <p style="margin-bottom: 8px;">🏆 Achievements: <span style="color: var(--primary); font-weight: 600;">${stats.totalAchievements}</span></p>
+                        <p style="margin-bottom: 15px;">💎 Total Points Issued: <span style="color: var(--primary); font-weight: 600;">${stats.totalPointsIssued}</span></p>
+                    `;
+                    showNotification('Blockchain stats loaded! 📊', 'success');
+                }
+            } catch (err) {
+                console.error('Error loading blockchain stats:', err);
+                showNotification('Error loading stats', 'error');
+            }
+        }
+
+        async function issueBlockchainAchievement() {
+            try {
+                const title = document.getElementById('achievementTitle').value;
+                const points = parseInt(document.getElementById('achievementPoints').value);
+                const description = document.getElementById('achievementDescription').value;
+                
+                if (!title || !points || !description) {
+                    showNotification('Please fill all fields', 'error');
+                    return;
+                }
+
+                const response = await fetch('/api/blockchain/issue-achievement', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: currentUser?.id || 'user-' + Date.now(),
+                        userName: currentUser?.name || 'Anonymous',
+                        achievement: { title, description, points, difficulty: 'Medium' }
+                    })
+                });
+
+                const data = await response.json();
+                if (data.status === 'success') {
+                    const cert = data.certificate;
+                    const certInfo = `
+Certificate Hash: ${cert.certificateHash.substring(0, 16)}...
+Blockchain TX: ${cert.blockchainVerification.transactionHash.substring(0, 16)}...
+Block Number: ${cert.blockchainVerification.blockNumber}
+Verified: ✅ Yes`;
+                    alert('🎓 Certificate Issued!\n\n' + certInfo);
+                    
+                    // Clear form
+                    document.getElementById('achievementTitle').value = '';
+                    document.getElementById('achievementPoints').value = '';
+                    document.getElementById('achievementDescription').value = '';
+                    
+                    showNotification('Achievement issued on blockchain! 🔗', 'success');
+                }
+            } catch (err) {
+                console.error('Error issuing achievement:', err);
+                showNotification('Error: ' + err.message, 'error');
+            }
+        }
+
+        async function generateVerifiableCredential() {
+            try {
+                const response = await fetch('/api/blockchain/verify-credential', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: currentUser?.id || 'user-' + Date.now(),
+                        userName: currentUser?.name || 'User',
+                        email: currentUser?.email || 'user@example.com',
+                        achievements: [
+                            { title: 'Python Mastery', points: 500, completedDate: new Date().toISOString() },
+                            { title: 'Data Science Pro', points: 750, completedDate: new Date().toISOString() }
+                        ]
+                    })
+                });
+
+                const data = await response.json();
+                if (data.status === 'success') {
+                    document.getElementById('credentialJSON').textContent = JSON.stringify(data.credential, null, 2);
+                    document.getElementById('credentialOutput').style.display = 'block';
+                    showNotification('Verifiable credential generated! 📜', 'success');
+                }
+            } catch (err) {
+                console.error('Error generating credential:', err);
+                showNotification('Error: ' + err.message, 'error');
+            }
+        }
+
+        async function createNFTMetadata() {
+            try {
+                const blockchainAddress = document.getElementById('blockchainAddress').textContent;
+                if (blockchainAddress === 'Loading...' || !blockchainAddress.startsWith('0x')) {
+                    showNotification('Please generate blockchain address first', 'error');
+                    return;
+                }
+
+                const response = await fetch('/api/blockchain/create-nft', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        achievement: { title: 'NFT Badge', description: 'Achievement NFT Badge', points: 100, difficulty: 'Hard' },
+                        recipientAddress: blockchainAddress
+                    })
+                });
+
+                const data = await response.json();
+                if (data.status === 'success') {
+                    const nft = data.nftMetadata;
+                    alert(`🎨 NFT Created!\nName: ${nft.name}\nStandard: ${nft.contract.standard}\nRecipient: ${nft.recipient.substring(0, 10)}...`);
+                    showNotification('NFT metadata created! 🖼️', 'success');
+                }
+            } catch (err) {
+                console.error('Error creating NFT:', err);
+                showNotification('Error: ' + err.message, 'error');
+            }
+        }
+
+        async function createBlockchainTransaction() {
+            try {
+                const fromAddress = document.getElementById('blockchainAddress').textContent;
+                if (fromAddress === 'Loading...' || !fromAddress.startsWith('0x')) {
+                    showNotification('Please generate blockchain address first', 'error');
+                    return;
+                }
+
+                const response = await fetch('/api/blockchain/create-transaction', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        from: fromAddress,
+                        to: '0x' + 'a'.repeat(40),
+                        data: { type: 'achievement', achievement: 'Test Achievement' }
+                    })
+                });
+
+                const data = await response.json();
+                if (data.status === 'success') {
+                    const tx = data.transaction;
+                    alert(`🔗 Transaction Created!\nHash: ${tx.hash.substring(0, 16)}...\nGas: ${tx.gasUsed} wei\nStatus: ${tx.status}`);
+                    showNotification('Transaction created! 🔗', 'success');
+                }
+            } catch (err) {
+                console.error('Error creating transaction:', err);
+                showNotification('Error: ' + err.message, 'error');
+            }
+        }
+
+        async function verifyBlockchainTransaction() {
+            try {
+                const txHash = prompt('Enter transaction hash to verify:');
+                if (!txHash) return;
+
+                const response = await fetch(`/api/blockchain/verify-transaction/${txHash}`);
+                const data = await response.json();
+                
+                if (data.verification.verified) {
+                    alert(`✅ Transaction Verified!\nStatus: ${data.verification.status}\nConfirmations: ${data.verification.confirmations}`);
+                    showNotification('Transaction verified! ✅', 'success');
+                } else {
+                    showNotification('Transaction not found', 'error');
+                }
+            } catch (err) {
+                console.error('Error verifying transaction:', err);
+                showNotification('Error: ' + err.message, 'error');
+            }
+        }
+
+        async function executeSmartContract() {
+            try {
+                const func = document.getElementById('contractFunction').value;
+                if (!func) {
+                    showNotification('Please select a function', 'error');
+                    return;
+                }
+
+                const response = await fetch('/api/blockchain/contract-interaction', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contractAddress: '0x' + 'b'.repeat(40),
+                        functionName: func,
+                        parameters: { achievement: 'Test' },
+                        caller: document.getElementById('blockchainAddress').textContent,
+                        result: { success: true }
+                    })
+                });
+
+                const data = await response.json();
+                if (data.status === 'success') {
+                    alert(`⚙️ Smart Contract Executed!\nFunction: ${data.interaction.functionName}\nExecution Time: ${data.interaction.executionTime}ms`);
+                    showNotification('Smart contract executed! ⚙️', 'success');
+                }
+            } catch (err) {
+                console.error('Error executing smart contract:', err);
+                showNotification('Error: ' + err.message, 'error');
+            }
+        }
 
         
     </script>
