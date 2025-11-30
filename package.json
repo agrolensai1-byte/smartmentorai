@@ -1,0 +1,13 @@
+{
+  "name": "skilledge-prototype",
+  "version": "1.0.0",
+  "description": "SkillEdge prototype with simple Express + Socket.IO backend for realtime demo",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2"
+  }
+}

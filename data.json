@@ -1,0 +1,10 @@
+{
+  "users": {
+    "Student": {
+      "name": "Student",
+      "points": 0,
+      "badges": [],
+      "path": null
+    }
+  }
+}
