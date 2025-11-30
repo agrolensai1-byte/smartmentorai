@@ -1,16 +1,69 @@
-# SmartMentorAI - Docker Deployment
+# SmartMentorAI - Learning Platform with AI Tutor
 
-## Quick Start
+**Live Demo**: [Deploy Online in 5 Minutes](DEPLOY_NOW.txt) 🚀
+
+## Quick Start (Local Development)
+
+### Prerequisites
+- Node.js 18+ installed
+- Port 3000 available
+
+### Run Locally
+
+```bash
+# Install dependencies
+npm install
+
+# Start server
+node server.js
+
+# Open application
+http://127.0.0.1:3000
+```
+
+## Deploy Online (Free & Easy)
+
+### Using Render (Recommended)
+
+1. **Create GitHub Repository**
+   - Go to https://github.com/new
+   - Create repo: `smartmentorai`
+
+2. **Push Code**
+   ```bash
+   git branch -M main
+   git remote add origin https://github.com/YOUR_USERNAME/smartmentorai.git
+   git push -u origin main
+   ```
+
+3. **Deploy on Render**
+   - Visit https://render.com
+   - Sign up with GitHub
+   - Click "New" → "Web Service"
+   - Select repository
+   - Start Command: `node server.js`
+   - Click "Create"
+
+4. **Done!** Your app goes live in 2-5 minutes
+   - URL: `https://smartmentorai.onrender.com`
+
+**See [DEPLOY_ONLINE_GUIDE.txt](DEPLOY_ONLINE_GUIDE.txt) for detailed instructions**
+
+### Alternative Platforms
+- Railway: https://railway.app
+- Heroku: https://www.heroku.com (paid after free tier)
+- DigitalOcean: https://www.digitalocean.com
+
+## Docker Deployment
 
 ### Prerequisites
 - Docker Desktop installed
 - 1 GB disk space
-- Port 3000 available
 
 ### Deploy with Docker
 
 ```bash
-# Build the Docker image
+# Build image
 .\build.bat
 
 # Start services
@@ -22,7 +75,7 @@ http://localhost:3000/skilleedge-pro.html
 
 ### Verify Status
 ```bash
-# Check container status
+# Check container
 docker-compose ps
 
 # View logs
