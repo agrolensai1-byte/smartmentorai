@@ -63,7 +63,26 @@ app.use(express.json())
 
 // Serve root route - MUST be before static middleware
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'skilleedge-pro.html'))
+  const filePath = path.join(__dirname, 'skilleedge-pro.html')
+  console.log(`[ROOT ROUTE] Attempting to serve: ${filePath}`)
+  console.log(`[ROOT ROUTE] File exists: ${fs.existsSync(filePath)}`)
+  
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error(`[ROOT ROUTE ERROR] Failed to send file: ${err.message}`)
+      console.error(`[ROOT ROUTE ERROR] Code: ${err.code}`)
+      console.error(`[ROOT ROUTE ERROR] Status: ${err.status}`)
+      // Try fallback - just send HTML directly
+      try {
+        const htmlContent = fs.readFileSync(filePath, 'utf8')
+        res.type('text/html').send(htmlContent)
+        console.log(`[ROOT ROUTE] Fallback: Sent HTML via read+send`)
+      } catch (readErr) {
+        console.error(`[ROOT ROUTE FALLBACK ERROR] ${readErr.message}`)
+        res.status(500).send('Error loading application')
+      }
+    }
+  })
 })
 
 // serve static prototype files (images, css, js, etc)
@@ -224,6 +243,19 @@ io.on('connection', socket =>{
   socket.on('disconnect', ()=>{
     // nothing for now
   })
+})
+
+// Catch-all route for undefined routes
+app.use((req, res) => {
+  console.log(`[CATCH-ALL] Undefined route: ${req.method} ${req.path}`)
+  res.status(404).send('Not Found')
+})
+
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error(`[GLOBAL ERROR] ${err.message}`)
+  console.error(err.stack)
+  res.status(500).json({ error: err.message || 'Internal Server Error' })
 })
 
 const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : '127.0.0.1'
