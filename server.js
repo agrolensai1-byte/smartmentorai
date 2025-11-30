@@ -62,9 +62,25 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname)))
 app.use(express.json())
 
-// Serve root route
+// Serve root route - handle both / and /skilleedge-pro.html
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'skilleedge-pro.html'))
+  const filePath = path.join(__dirname, 'skilleedge-pro.html')
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error('Error sending file:', err)
+      res.status(500).send('Error loading application')
+    }
+  })
+})
+
+app.get('/skilleedge-pro.html', (req, res) => {
+  const filePath = path.join(__dirname, 'skilleedge-pro.html')
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error('Error sending file:', err)
+      res.status(500).send('Error loading application')
+    }
+  })
 })
 
 // Network status endpoint
